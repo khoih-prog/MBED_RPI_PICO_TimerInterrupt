@@ -2,7 +2,7 @@
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/MBED_RPI_PICO_TimerInterrupt.svg?)](https://www.ardu-badge.com/MBED_RPI_PICO_TimerInterrupt)
 [![GitHub release](https://img.shields.io/github/release/khoih-prog/MBED_RPI_PICO_TimerInterrupt.svg)](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/releases)
-[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/blob/main/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/MBED_RPI_PICO_TimerInterrupt.svg)](http://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/issues)
 
@@ -11,7 +11,7 @@
 
 ## Table of Contents
 
-* [Why do we need this MBED_RPI_PICO_TimerInterrupt library](#why-do-we-need-this-rpi_pico_timerinterrupt-library)
+* [Why do we need this MBED_RPI_PICO_TimerInterrupt library](#why-do-we-need-this-mbed_rpi_pico_timerinterrupt-library)
   * [Features](#features)
   * [Why using ISR-based Hardware Timer Interrupt is better](#why-using-isr-based-hardware-timer-interrupt-is-better)
   * [Currently supported Boards](#currently-supported-boards)
@@ -39,7 +39,7 @@
   * [  2. Argument_None](examples/Argument_None)
   * [  3. Argument_Simple](examples/Argument_Simple)
   * [  4. Change_Interval](examples/Change_Interval).
-  * [  5. ISR_Timers_Array_Complex](examples/ISR_Timers_Array_Complex)
+  * [  5. ISR_16_Timers_Array_Complex](examples/ISR_16_Timers_Array_Complex)
   * [  6. ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple)
   * [  7. SwitchDebounce](examples/SwitchDebounce)
   * [  8. TimerInterruptTest](examples/TimerInterruptTest)
@@ -49,7 +49,7 @@
   * [2. TimerInterruptTest on RaspberryPi Pico](#2-timerinterrupttest-on-raspberrypi-pico)
   * [3. Change_Interval on RaspberryPi Pico](#3-change_interval-on-raspberrypi-pico)
   * [4. SwitchDebounce on RaspberryPi Pico](#4-switchdebounce-on-raspberrypi-pico)
-  * [5. ISR_Timers_Array_Complex on RaspberryPi Pico](#1-isr_timers_array_complex-on-raspberrypi-pico)
+  * [5. ISR_16_Timers_Array_Complex on RaspberryPi Pico](#1-isr_16_timers_array_complex-on-raspberrypi-pico)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
@@ -76,7 +76,7 @@ Now with these new **16 ISR-based timers**, the maximum interval is **practicall
 
 The most important feature is they're ISR-based timers. Therefore, their executions are **not blocked by bad-behaving functions / tasks**. This important feature is absolutely necessary for mission-critical tasks. 
 
-The [**ISR_Timers_Array_Complex**](examples/ISR_Timers_Array_Complex) example will demonstrate the nearly perfect accuracy compared to software timers by printing the actual elapsed millisecs of each type of timers.
+The [**ISR_16_Timers_Array_Complex**](examples/ISR_16_Timers_Array_Complex) example will demonstrate the nearly perfect accuracy compared to software timers by printing the actual elapsed millisecs of each type of timers.
 
 Being ISR-based timers, their executions are not blocked by bad-behaving functions / tasks, such as connecting to WiFi, Internet and Blynk services. You can also have many `(up to 16)` timers to use.
 
@@ -152,9 +152,9 @@ You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/
 Another way to install is to:
 
 1. Navigate to [**MBED_RPI_PICO_TimerInterrupt**](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt) page.
-2. Download the latest release `MBED_RPI_PICO_TimerInterrupt-master.zip`.
-3. Extract the zip file to `MBED_RPI_PICO_TimerInterrupt-master` directory 
-4. Copy whole `MBED_RPI_PICO_TimerInterrupt-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+2. Download the latest release `MBED_RPI_PICO_TimerInterrupt-main.zip`.
+3. Extract the zip file to `MBED_RPI_PICO_TimerInterrupt-main` directory 
+4. Copy whole `MBED_RPI_PICO_TimerInterrupt-main` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
 ### VS Code & PlatformIO
 
@@ -411,7 +411,7 @@ void setup()
  2. [Argument_None](examples/Argument_None)
  3. [Argument_Simple](examples/Argument_Simple) 
  4. [Change_Interval](examples/Change_Interval) 
- 5. [ISR_Timers_Array_Complex](examples/ISR_Timers_Array_Complex)
+ 5. [ISR_16_Timers_Array_Complex](examples/ISR_16_Timers_Array_Complex)
  6. [ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple)
  7. [SwitchDebounce](examples/SwitchDebounce) 
  8. [TimerInterruptTest](examples/TimerInterruptTest)
@@ -954,7 +954,7 @@ If you want to contribute to this project:
 
 ### License
 
-- The library is licensed under [MIT](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/blob/master/LICENSE)
+- The library is licensed under [MIT](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/blob/main/LICENSE)
 
 ---
 
