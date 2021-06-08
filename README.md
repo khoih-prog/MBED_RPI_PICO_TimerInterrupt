@@ -49,7 +49,7 @@
   * [2. TimerInterruptTest on RaspberryPi Pico](#2-timerinterrupttest-on-raspberrypi-pico)
   * [3. Change_Interval on RaspberryPi Pico](#3-change_interval-on-raspberrypi-pico)
   * [4. SwitchDebounce on RaspberryPi Pico](#4-switchdebounce-on-raspberrypi-pico)
-  * [5. ISR_16_Timers_Array_Complex on RaspberryPi Pico](#1-isr_16_timers_array_complex-on-raspberrypi-pico)
+  * [5. ISR_16_Timers_Array_Complex on RaspberryPi Pico](#5-isr_16_timers_array_complex-on-raspberrypi-pico)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
