@@ -25,11 +25,12 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.0.0
+  Version: 1.0.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      07/06/2021 Initial coding to support MBED RP2040-based boards such as RASPBERRY_PI_PICO. etc.
+  1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
 *****************************************************************************************************************************/
 
 #pragma once
@@ -45,7 +46,7 @@
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED RPi_Pico_TimerInterrupt v1.0.0"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED RPi_Pico_TimerInterrupt v1.0.1"
 #endif
 
 #include "TimerInterrupt_Generic_Debug.h"

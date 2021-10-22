@@ -16,8 +16,7 @@
   * [Why using ISR-based Hardware Timer Interrupt is better](#why-using-isr-based-hardware-timer-interrupt-is-better)
   * [Currently supported Boards](#currently-supported-boards)
   * [Important Notes about ISR](#important-notes-about-isr)
-* [Changelog](#changelog)
-  * [Initial Releases v1.0.0](#initial-releases-v100)
+* [Changelog](changelog.md)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
   * [Use Arduino Library Manager](#use-arduino-library-manager)
@@ -52,7 +51,6 @@
   * [5. ISR_16_Timers_Array_Complex on RaspberryPi Pico](#5-isr_16_timers_array_complex-on-raspberrypi-pico)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
-* [Releases](#releases)
 * [Issues](#issues)
 * [TO DO](#to-do)
 * [DONE](#done)
@@ -122,20 +120,11 @@ The catch is **your function is now part of an ISR (Interrupt Service Routine), 
 ---
 ---
 
-## Changelog
-
-### Initial Releases v1.0.0
-
-1. Initial coding to support RP2040-based boards such as **Nano_RP2040_Connect, RASPBERRY_PI_PICO**, etc. using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed)
-
-
----
----
 
 ## Prerequisites
 
-1. [`Arduino IDE 1.8.15+` for Arduino](https://www.arduino.cc/en/Main/Software)
-2. [`Arduino mbed_rp2040 core 2.4.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as **Arduino Nano RP2040 Connect, RASPBERRY_PI_PICO, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
+1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
+2. [`Arduino mbed_rp2040 core 2.5.2+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as **Arduino Nano RP2040 Connect, RASPBERRY_PI_PICO, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
 
 ---
 ---
@@ -589,7 +578,7 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_Timers_Array_Simple on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.0
+MBED_RPi_Pico_TimerInterrupt v1.0.1
 [TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 1 , _fre = 1000000.00
 [TISR] _count = 0 - 1000
 [TISR] hardware_alarm_set_target, uS = 1000
@@ -613,7 +602,7 @@ The following is the sample terminal output when running example [TimerInterrupt
 
 ```
 Starting TimerInterruptTest on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.0
+MBED_RPi_Pico_TimerInterrupt v1.0.1
 [TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
 [TISR] _count = 0 - 1000000
 [TISR] hardware_alarm_set_target, uS = 1000000
@@ -641,7 +630,7 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.0
+MBED_RPi_Pico_TimerInterrupt v1.0.1
 [TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
 [TISR] _count = 0 - 2000000
 [TISR] hardware_alarm_set_target, uS = 2000000
@@ -679,7 +668,7 @@ The following is the sample terminal output when running example [SwitchDebounce
 
 ```
 Starting SwitchDebounce on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.0
+MBED_RPi_Pico_TimerInterrupt v1.0.1
 [TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 1 , _fre = 1000000.00
 [TISR] _count = 0 - 1000
 [TISR] hardware_alarm_set_target, uS = 1000
@@ -713,7 +702,7 @@ The following is the sample terminal output when running example [ISR_16_Timers_
 
 ```
 Starting ISR_16_Timers_Array_Complex on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.0
+MBED_RPi_Pico_TimerInterrupt v1.0.1
 [TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
 [TISR] _count = 0 - 10000
 [TISR] hardware_alarm_set_target, uS = 10000
@@ -897,15 +886,6 @@ If you get compilation errors, more often than not, you may need to install a ne
 
 Sometimes, the library will only work if you update the board core to the latest version because I am using newly added functions.
 
-
----
----
-
-## Releases
-
-### Initial Releases v1.0.0
-
-1. Initial coding to support RP2040-based boards such as **Nano_RP2040_Connect, RASPBERRY_PI_PICO**, etc. using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed)
 
 ---
 ---

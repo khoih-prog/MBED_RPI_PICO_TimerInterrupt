@@ -24,12 +24,6 @@
 
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
-
-  Version: 1.0.0
-
-  Version Modified By   Date      Comments
-  ------- -----------  ---------- -----------
-  1.0.0   K Hoang      07/06/2021 Initial coding to support MBED RP2040-based boards such as RASPBERRY_PI_PICO. etc.
 *****************************************************************************************************************************/
 /*
    Notes:

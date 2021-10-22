@@ -24,12 +24,6 @@
 
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
-
-  Version: 1.0.0
-
-  Version Modified By   Date      Comments
-  ------- -----------  ---------- -----------
-  1.0.0   K Hoang      07/06/2021 Initial coding to support MBED RP2040-based boards such as RASPBERRY_PI_PICO. etc.
 *****************************************************************************************************************************/
 
 /*
@@ -102,7 +96,7 @@ void printResult(uint32_t currTime)
   lastCount = Timer0Count;
 }
 
-#define TIMER0_INTERVAL_MS        50
+#define TIMER0_INTERVAL_MS        20
 
 // Init ESP32 timer 0
 MBED_RPI_PICO_Timer ITimer0(0);
