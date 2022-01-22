@@ -3,7 +3,7 @@
   For MBED RP2040-based boards such as Nano_RP2040_Connect, RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040.
   Written by Khoi Hoang
 
-  Built by Khoi Hoang https://github.com/khoih-prog/RPI_PICO_TimerInterrupt
+  Built by Khoi Hoang https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
   Licensed under MIT license
 
   The RPI_PICO system timer peripheral provides a global microsecond timebase for the system, and generates
@@ -17,13 +17,6 @@
   The accuracy is nearly perfect compared to software timers. The most important feature is they're ISR-based timers
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
-
-  Based on SimpleTimer - A timer library for Arduino.
-  Author: mromani@ottotecnica.com
-  Copyright (c) 2010 OTTOTECNICA Italy
-
-  Based on BlynkTimer.h
-  Author: Volodymyr Shymanskyy
 *****************************************************************************************************************************/
 
 /*
@@ -49,6 +42,7 @@
 // _TIMERINTERRUPT_LOGLEVEL_ from 0 to 4
 #define _TIMERINTERRUPT_LOGLEVEL_     4
 
+// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "MBED_RPi_Pico_TimerInterrupt.h"
 
 #ifndef LED_BUILTIN

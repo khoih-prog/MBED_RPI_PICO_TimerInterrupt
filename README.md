@@ -11,6 +11,7 @@
 
 ## Table of Contents
 
+* [Important Change from v1.1.0](#Important-Change-from-v110)
 * [Why do we need this MBED_RPI_PICO_TimerInterrupt library](#why-do-we-need-this-mbed_rpi_pico_timerinterrupt-library)
   * [Features](#features)
   * [Why using ISR-based Hardware Timer Interrupt is better](#why-using-isr-based-hardware-timer-interrupt-is-better)
@@ -42,6 +43,8 @@
   * [  6. ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple)
   * [  7. SwitchDebounce](examples/SwitchDebounce)
   * [  8. TimerInterruptTest](examples/TimerInterruptTest)
+  * [  9. **50ms_HWTimer**](examples/50ms_HWTimer) **New**
+  * [ 10. **multiFileProject**](examples/multiFileProject) **New**
 * [Example ISR_Timers_Array_Simple](#example-isr_timers_array_simple)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. ISR_Timers_Array_Simple on RaspberryPi Pico](#1-isr_timers_array_simple-on-raspberrypi-pico)
@@ -61,6 +64,10 @@
 
 ---
 ---
+
+### Important Change from v1.1.0
+
+Please have a look at [HOWTO Fix `Multiple Definitions` Linker Error](#howto-fix-multiple-definitions-linker-error)
 
 ### Why do we need this [MBED_RPI_PICO_TimerInterrupt library](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt)
 
@@ -123,9 +130,12 @@ The catch is **your function is now part of an ISR (Interrupt Service Routine), 
 
 ## Prerequisites
 
-1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
-2. [`Arduino mbed_rp2040 core 2.5.2+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as **Arduino Nano RP2040 Connect, RASPBERRY_PI_PICO, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-
+1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
+2. [`Arduino mbed_rp2040 core 2.6.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as **Arduino Nano RP2040 Connect, RASPBERRY_PI_PICO, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
+3. To use with certain example
+   - [`SimpleTimer library`](https://github.com/jfturcot/SimpleTimer) for [ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple) and [ISR_16_Timers_Array_Complex](examples/ISR_16_Timers_Array_Complex) examples.
+   
+   
 ---
 ---
 
@@ -159,24 +169,29 @@ Another way to install is to:
 
 ### HOWTO Fix `Multiple Definitions` Linker Error
 
-The current library implementation, using **xyz-Impl.h instead of standard xyz.cpp**, possibly creates certain `Multiple Definitions` Linker error in certain use cases. Although it's simple to just modify several lines of code, either in the library or in the application, the library is adding 2 more source directories
+The current library implementation, using `xyz-Impl.h` instead of standard `xyz.cpp`, possibly creates certain `Multiple Definitions` Linker error in certain use cases.
 
-1. **scr_h** for new h-only files
-2. **src_cpp** for standard h/cpp files
+You can include these `.hpp` files
 
-besides the standard **src** directory.
+```
+// Can be included as many times as necessary, without `Multiple Definitions` Linker Error
+#include "MBED_RPi_Pico_TimerInterrupt.hpp"   //https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
 
-To use the **old standard cpp** way, locate this library' directory, then just 
+// Can be included as many times as necessary, without `Multiple Definitions` Linker Error
+#include "MBED_RPi_Pico_ISR_Timer.hpp"        //https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
+```
 
-1. **Delete the all the files in src directory.**
-2. **Copy all the files in src_cpp directory into src.**
-3. Close then reopen the application code in Arduino IDE, etc. to recompile from scratch.
+in many files. But be sure to use the following `.h` files **in just 1 `.h`, `.cpp` or `.ino` file**, which must **not be included in any other file**, to avoid `Multiple Definitions` Linker Error
 
-To re-use the **new h-only** way, just 
+```
+// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
+#include "MBED_RPi_Pico_TimerInterrupt.h"     //https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
 
-1. **Delete the all the files in src directory.**
-2. **Copy the files in src_h directory into src.**
-3. Close then reopen the application code in Arduino IDE, etc. to recompile from scratch.
+// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
+#include "MBED_RPi_Pico_ISR_Timer.h"          //https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
+```
+
+Check the new [**multiFileProject** example](examples/multiFileProject) for a `HOWTO` demo.
 
 ---
 ---
@@ -404,6 +419,8 @@ void setup()
  6. [ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple)
  7. [SwitchDebounce](examples/SwitchDebounce) 
  8. [TimerInterruptTest](examples/TimerInterruptTest)
+ 9. [**50ms_HWTimer**](examples/50ms_HWTimer) **New**
+10. [**multiFileProject**](examples/multiFileProject) **New**
 
 ---
 ---
@@ -422,7 +439,10 @@ void setup()
 // _TIMERINTERRUPT_LOGLEVEL_ from 0 to 4
 #define _TIMERINTERRUPT_LOGLEVEL_     4
 
+// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "MBED_RPi_Pico_TimerInterrupt.h"
+
+// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "MBED_RPi_Pico_ISR_Timer.h"
 
 #include <SimpleTimer.h>              // https://github.com/schinken/SimpleTimer
@@ -578,9 +598,9 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_Timers_Array_Simple on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.1
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 1 , _fre = 1000000.00
-[TISR] _count = 0 - 1000
+MBED_RPi_Pico_TimerInterrupt v1.1.0
+[TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 1000.00
+[TISR] _count = 0-1000
 [TISR] hardware_alarm_set_target, uS = 1000
 Starting ITimer1 OK, millis() = 1690
 SimpleTimer : programmed 2000ms, current time ms : 11290, Delta ms : 11290
@@ -602,13 +622,13 @@ The following is the sample terminal output when running example [TimerInterrupt
 
 ```
 Starting TimerInterruptTest on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.1
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
-[TISR] _count = 0 - 1000000
+MBED_RPi_Pico_TimerInterrupt v1.1.0
+[TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 1.00
+[TISR] _count = 0-1000000
 [TISR] hardware_alarm_set_target, uS = 1000000
 Starting ITimer0 OK, millis() = 1787
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 1 , _fre = 1000000.00
-[TISR] _count = 0 - 3000000
+[TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 0.33
+[TISR] _count = 0-3000000
 [TISR] hardware_alarm_set_target, uS = 3000000
 Starting ITimer1 OK, millis() = 1789
 Stop ITimer0, millis() = 5001
@@ -630,15 +650,15 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.1
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
-[TISR] _count = 0 - 2000000
+MBED_RPi_Pico_TimerInterrupt v1.1.0
+[TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 0.50
+[TISR] _count = 0-2000000
 [TISR] hardware_alarm_set_target, uS = 2000000
-Starting  ITimer0 OK, millis() = 1285
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 1 , _fre = 1000000.00
-[TISR] _count = 0 - 5000000
+Starting  ITimer0 OK, millis() = 1282
+[TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 0.20
+[TISR] _count = 0-5000000
 [TISR] hardware_alarm_set_target, uS = 5000000
-Starting  ITimer1 OK, millis() = 1287
+Starting  ITimer1 OK, millis() = 1284
 Time = 10001, Timer0Count = 4, Timer1Count = 1
 Time = 20002, Timer0Count = 9, Timer1Count = 3
 [TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
@@ -668,9 +688,9 @@ The following is the sample terminal output when running example [SwitchDebounce
 
 ```
 Starting SwitchDebounce on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.1
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 1 , _fre = 1000000.00
-[TISR] _count = 0 - 1000
+MBED_RPi_Pico_TimerInterrupt v1.1.0
+[TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 1000.00
+[TISR] _count = 0-1000
 [TISR] hardware_alarm_set_target, uS = 1000
 Starting ITimer1 OK, millis() = 1185
 SW Pressed, from millis() = 4537
@@ -702,9 +722,9 @@ The following is the sample terminal output when running example [ISR_16_Timers_
 
 ```
 Starting ISR_16_Timers_Array_Complex on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.0.1
-[TISR] MBED_RPI_PICO_TimerInterrupt: _timerNo = 0 , _fre = 1000000.00
-[TISR] _count = 0 - 10000
+MBED_RPi_Pico_TimerInterrupt v1.1.0
+[TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 100.00
+[TISR] _count = 0-10000
 [TISR] hardware_alarm_set_target, uS = 10000
 Starting ITimer OK, millis() = 1083
 SimpleTimer : 2, ms : 10683, Dms : 9599
@@ -899,7 +919,7 @@ Submit issues to: [MBED_RPI_PICO_TimerInterrupt issues](https://github.com/khoih
 ## TO DO
 
 1. Search for bug and improvement.
-2. Add support to RP2040-based boards such as RASPBERRY_PI_PICO, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed)
+
 
 ---
 
@@ -910,6 +930,8 @@ Submit issues to: [MBED_RPI_PICO_TimerInterrupt issues](https://github.com/khoih
 3. Longer time interval
 4. Add Version String 
 5. Add Table of Contents
+6. Fix `multiple-definitions` linker error
+7. Optimize library code by using `reference-passing` instead of `value-passing`
 
 ---
 ---

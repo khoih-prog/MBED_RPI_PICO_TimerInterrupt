@@ -37,11 +37,20 @@
 
 #pragma once
 
-#ifndef MBED_RPI_PICO_TIMERINTERRUPT_H
-#define MBED_RPI_PICO_TIMERINTERRUPT_H
+#ifndef MBED_RPI_PICO_TIMERINTERRUPT_IMPL_H
+#define MBED_RPI_PICO_TIMERINTERRUPT_IMPL_H
 
-#include "MBED_RPi_Pico_TimerInterrupt.hpp"
-#include "MBED_RPi_Pico_TimerInterrupt_Impl.h"
+#include "TimerInterrupt_Generic_Debug.h"
 
-#endif    // MBED_RPI_PICO_TIMERINTERRUPT_H
+void TIMER_ISR_START(uint alarm_num)
+{  
+  absAlarmTime[alarm_num]._private_us_since_boot = time_us_64() + _timerCount[alarm_num];                
+  hardware_alarm_set_target(alarm_num, absAlarmTime[alarm_num]);
+}
+
+void TIMER_ISR_END(uint alarm_num)
+{
+}
+
+#endif    // MBED_RPI_PICO_TIMERINTERRUPT_IMPL_H
 
