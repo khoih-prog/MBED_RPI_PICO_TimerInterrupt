@@ -26,13 +26,14 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.0
+  Version: 1.1.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      07/06/2021 Initial coding to support MBED RP2040-based boards such as RASPBERRY_PI_PICO. etc.
   1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
-  1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error.
+  1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
+  1.1.1   K.Hoang      25/09/2022 Remove redundant function call
 *****************************************************************************************************************************/
 
 #pragma once
@@ -48,13 +49,13 @@
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.0"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.1"
   
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MAJOR      1
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      0
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      1
 
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001000  
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001001
 #endif
 
 #ifndef TIMER_INTERRUPT_DEBUG
@@ -143,7 +144,8 @@ class MBED_RPI_PICO_TimerInterrupt
         TIMER_ISR_START(_timerNo);
                
         //bool hardware_alarm_set_target(uint alarm_num, absolute_time_t t);
-        hardware_alarm_set_target(_timerNo, absAlarmTime[_timerNo]);
+        // KH, redundant, to be removed
+        //hardware_alarm_set_target(_timerNo, absAlarmTime[_timerNo]);
          
         TISR_LOGWARN1(F("hardware_alarm_set_target, uS = "), _timerCount[_timerNo]);
 
@@ -185,21 +187,22 @@ class MBED_RPI_PICO_TimerInterrupt
 
     void disableTimer()
     {
-      hardware_alarm_set_callback(_timerNo, NULL);
+      //hardware_alarm_set_callback(_timerNo, NULL);
+      hardware_alarm_cancel(_timerNo);
     }
 
     // Duration (in milliseconds). Duration = 0 or not specified => run indefinitely
     void reattachInterrupt()
     {
-      TIMER_ISR_START(_timerNo);
       hardware_alarm_set_callback(_timerNo, _callback);
+      TIMER_ISR_START(_timerNo);     
     }
 
     // Duration (in milliseconds). Duration = 0 or not specified => run indefinitely
     void enableTimer()
     {
-      TIMER_ISR_START(_timerNo);
       hardware_alarm_set_callback(_timerNo, _callback);
+      TIMER_ISR_START(_timerNo); 
     }
 
     // Just stop clock source, clear the count
@@ -211,8 +214,8 @@ class MBED_RPI_PICO_TimerInterrupt
     // Just reconnect clock source, start current count from 0
     void restartTimer()
     {
-      TIMER_ISR_START(_timerNo);
       hardware_alarm_set_callback(_timerNo, _callback);
+      TIMER_ISR_START(_timerNo); 
     }
 
     int8_t getTimer() __attribute__((always_inline))

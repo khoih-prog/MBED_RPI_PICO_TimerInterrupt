@@ -6,7 +6,8 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/MBED_RPI_PICO_TimerInterrupt.svg)](http://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/issues)
 
-<a href="https://www.buymeacoffee.com/khoihprog6" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
 
 ---
 ---
@@ -133,7 +134,7 @@ The catch is **your function is now part of an ISR (Interrupt Service Routine), 
 ## Prerequisites
 
 1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
-2. [`Arduino mbed_rp2040 core 2.7.2+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as **Arduino Nano RP2040 Connect, RASPBERRY_PI_PICO, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
+2. [`Arduino mbed_rp2040 core 3.3.0+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as **Arduino Nano RP2040 Connect, RASPBERRY_PI_PICO, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
 3. To use with certain example
    - [`SimpleTimer library`](https://github.com/jfturcot/SimpleTimer) for [ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple) and [ISR_16_Timers_Array_Complex](examples/ISR_16_Timers_Array_Complex) examples.
    
@@ -161,7 +162,7 @@ Another way to install is to:
 
 1. Install [VS Code](https://code.visualstudio.com/)
 2. Install [PlatformIO](https://platformio.org/platformio-ide)
-3. Install [**MBED_RPI_PICO_TimerInterrupt** library](https://platformio.org/lib/show/12389/MBED_RPI_PICO_TimerInterrupt) by using [Library Manager](https://platformio.org/lib/show/12389/MBED_RPI_PICO_TimerInterrupt/installation). Search for **MBED_RPI_PICO_TimerInterrupt** in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
+3. Install [**MBED_RPI_PICO_TimerInterrupt** library](https://registry.platformio.org/libraries/khoih-prog/MBED_RPI_PICO_TimerInterrupt) by using [Library Manager](https://registry.platformio.org/libraries/khoih-prog/MBED_RPI_PICO_TimerInterrupt/installation). Search for **MBED_RPI_PICO_TimerInterrupt** in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
 4. Use included [platformio.ini](platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automatically. Please visit documentation for the other options and examples at [Project Configuration File](https://docs.platformio.org/page/projectconf.html)
 
 
@@ -429,164 +430,8 @@ void setup()
 
 ### Example [ISR_Timers_Array_Simple](examples/ISR_Timers_Array_Simple)
 
-```
-#if ( defined(ARDUINO_NANO_RP2040_CONNECT) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || \
-      defined(ARDUINO_GENERIC_RP2040) ) && defined(ARDUINO_ARCH_MBED)
-  #define USING_MBED_RPI_PICO_TIMER_INTERRUPT        true
-#else
-  #error This code is intended to run on the MBED RASPBERRY_PI_PICO platform! Please check your Tools->Board setting.
-#endif
+https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/blob/de94afe43127fadcca97cdbf7398bb329b09ebc6/examples/ISR_Timers_Array_Simple/ISR_Timers_Array_Simple.ino#L22-L177
 
-// These define's must be placed at the beginning before #include "TimerInterrupt_Generic.h"
-// _TIMERINTERRUPT_LOGLEVEL_ from 0 to 4
-#define _TIMERINTERRUPT_LOGLEVEL_     4
-
-// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
-#include "MBED_RPi_Pico_TimerInterrupt.h"
-
-// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
-#include "MBED_RPi_Pico_ISR_Timer.h"
-
-#include <SimpleTimer.h>              // https://github.com/schinken/SimpleTimer
-
-// Init MBED_RPI_PICO_Timer
-MBED_RPI_PICO_Timer ITimer1(1);
-
-MBED_RPI_PICO_ISRTimer ISR_timer;
-
-#ifndef LED_BUILTIN
-  #define LED_BUILTIN       25
-#endif
-
-#define LED_TOGGLE_INTERVAL_MS        1000L
-
-// You have to use longer time here if having problem because Arduino AVR clock is low, 16MHz => lower accuracy.
-// Tested OK with 1ms when not much load => higher accuracy.
-#define TIMER_INTERVAL_MS            1L
-
-volatile uint32_t startMillis = 0;
-
-volatile uint32_t deltaMillis2s = 0;
-volatile uint32_t deltaMillis5s = 0;
-
-volatile uint32_t previousMillis2s = 0;
-volatile uint32_t previousMillis5s = 0;
-
-// Never use Serial.print inside this mbed ISR. Will hang the system
-void TimerHandler(uint alarm_num)
-{
-  static bool toggle  = false;
-  static int timeRun  = 0;
-
-  ///////////////////////////////////////////////////////////
-  // Always call this for MBED RP2040 before processing ISR
-  TIMER_ISR_START(alarm_num);
-  ///////////////////////////////////////////////////////////
-
-  ISR_timer.run();
-
-  // Toggle LED every LED_TOGGLE_INTERVAL_MS = 2000ms = 2s
-  if (++timeRun == ((LED_TOGGLE_INTERVAL_MS) / TIMER_INTERVAL_MS) )
-  {
-    timeRun = 0;
-
-    //timer interrupt toggles pin LED_BUILTIN
-    digitalWrite(LED_BUILTIN, toggle);
-    toggle = !toggle;
-  }
-
-  ////////////////////////////////////////////////////////////
-  // Always call this for MBED RP2040 after processing ISR
-  TIMER_ISR_END(alarm_num);
-  ////////////////////////////////////////////////////////////
-}
-
-void doingSomething2s()
-{
-  unsigned long currentMillis  = millis();
-
-  deltaMillis2s    = currentMillis - previousMillis2s;
-  previousMillis2s = currentMillis;
-}
-
-void doingSomething5s()
-{
-  unsigned long currentMillis  = millis();
-
-  deltaMillis5s    = currentMillis - previousMillis5s;
-  previousMillis5s = currentMillis;
-}
-
-/////////////////////////////////////////////////
-
-#define SIMPLE_TIMER_MS        2000L
-
-// Init SimpleTimer
-SimpleTimer simpleTimer;
-
-// Here is software Timer, you can do somewhat fancy stuffs without many issues.
-// But always avoid
-// 1. Long delay() it just doing nothing and pain-without-gain wasting CPU power.Plan and design your code / strategy ahead
-// 2. Very long "do", "while", "for" loops without predetermined exit time.
-void simpleTimerDoingSomething2s()
-{
-  static unsigned long previousMillis = startMillis;
-
-  unsigned long currMillis = millis();
-
-  Serial.print(F("SimpleTimer : programmed ")); Serial.print(SIMPLE_TIMER_MS);
-  Serial.print(F("ms, current time ms : ")); Serial.print(currMillis);
-  Serial.print(F(", Delta ms : ")); Serial.println(currMillis - previousMillis);
-
-  Serial.print(F("Timer2s actual : ")); Serial.println(deltaMillis2s);
-  Serial.print(F("Timer5s actual : ")); Serial.println(deltaMillis5s);
-  
-  previousMillis = currMillis;
-}
-
-////////////////////////////////////////////////
-
-void setup()
-{
-  pinMode(LED_BUILTIN, OUTPUT);
-
-  Serial.begin(115200);
-  while (!Serial);
-
-  Serial.print(F("\nStarting ISR_Timers_Array_Simple on ")); Serial.println(BOARD_NAME);
-  Serial.println(MBED_RPI_PICO_TIMER_INTERRUPT_VERSION);
-
-  if (ITimer1.attachInterruptInterval(TIMER_INTERVAL_MS * 1000, TimerHandler))
-  {
-    Serial.print(F("Starting ITimer1 OK, millis() = ")); Serial.println(millis());
-  }
-  else
-    Serial.println(F("Can't set ITimer1. Select another freq. or timer"));
-
-  previousMillis5s = previousMillis2s = millis();
-
-  ISR_timer.setInterval(2000L, doingSomething2s);
-  ISR_timer.setInterval(5000L, doingSomething5s);
-
-  // You need this timer for non-critical tasks. Avoid abusing ISR if not absolutely necessary.
-  simpleTimer.setInterval(SIMPLE_TIMER_MS, simpleTimerDoingSomething2s);
-}
-
-#define BLOCKING_TIME_MS      10000L
-
-void loop()
-{
-  // This unadvised blocking task is used to demonstrate the blocking effects onto the execution and accuracy to Software timer
-  // You see the time elapse of ISR_Timer still accurate, whereas very unaccurate for Software Timer
-  // The time elapse for 2000ms software timer now becomes 3000ms (BLOCKING_TIME_MS)
-  // While that of ISR_Timer is still prefect.
-  delay(BLOCKING_TIME_MS);
-
-  // You need this Software timer for non-critical tasks. Avoid abusing ISR if not absolutely necessary
-  // You don't need to and never call ISR_Timer.run() here in the loop(). It's already handled by ISR timer.
-  simpleTimer.run();
-}
-```
 ---
 ---
 
@@ -600,7 +445,7 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_Timers_Array_Simple on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.0
+MBED_RPi_Pico_TimerInterrupt v1.1.1
 [TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 1000.00
 [TISR] _count = 0-1000
 [TISR] hardware_alarm_set_target, uS = 1000
@@ -624,7 +469,7 @@ The following is the sample terminal output when running example [TimerInterrupt
 
 ```
 Starting TimerInterruptTest on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.0
+MBED_RPi_Pico_TimerInterrupt v1.1.1
 [TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 1.00
 [TISR] _count = 0-1000000
 [TISR] hardware_alarm_set_target, uS = 1000000
@@ -652,7 +497,7 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.0
+MBED_RPi_Pico_TimerInterrupt v1.1.1
 [TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 0.50
 [TISR] _count = 0-2000000
 [TISR] hardware_alarm_set_target, uS = 2000000
@@ -690,7 +535,7 @@ The following is the sample terminal output when running example [SwitchDebounce
 
 ```
 Starting SwitchDebounce on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.0
+MBED_RPi_Pico_TimerInterrupt v1.1.1
 [TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 1000.00
 [TISR] _count = 0-1000
 [TISR] hardware_alarm_set_target, uS = 1000
@@ -724,7 +569,7 @@ The following is the sample terminal output when running example [ISR_16_Timers_
 
 ```
 Starting ISR_16_Timers_Array_Complex on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.0
+MBED_RPi_Pico_TimerInterrupt v1.1.1
 [TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 100.00
 [TISR] _count = 0-10000
 [TISR] hardware_alarm_set_target, uS = 10000

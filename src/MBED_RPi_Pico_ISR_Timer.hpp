@@ -25,13 +25,14 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.0
+  Version: 1.1.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      07/06/2021 Initial coding to support MBED RP2040-based boards such as RASPBERRY_PI_PICO. etc.
   1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
-  1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error.
+  1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
+  1.1.1   K.Hoang      25/09/2022 Remove redundant function call
 *****************************************************************************************************************************/
 
 #pragma once
@@ -47,13 +48,13 @@
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.0"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.1"
   
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MAJOR      1
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      0
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      1
 
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001000  
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001001
 #endif
 
 #include "Arduino.h"
