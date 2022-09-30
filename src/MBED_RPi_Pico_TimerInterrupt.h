@@ -26,7 +26,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.1
+  Version: 1.1.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -34,6 +34,7 @@
   1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
+  1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
 *****************************************************************************************************************************/
 
 #pragma once

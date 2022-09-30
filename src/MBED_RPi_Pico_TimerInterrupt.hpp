@@ -26,7 +26,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.1
+  Version: 1.1.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -34,6 +34,7 @@
   1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
+  1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
 *****************************************************************************************************************************/
 
 #pragma once
@@ -49,13 +50,13 @@
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.1"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.2"
   
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MAJOR      1
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      1
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      2
 
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001001
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001002
 #endif
 
 #ifndef TIMER_INTERRUPT_DEBUG
@@ -163,7 +164,7 @@ class MBED_RPI_PICO_TimerInterrupt
 
     // interval (in microseconds) and duration (in milliseconds). Duration = 0 or not specified => run indefinitely
     // No params and duration now. To be added in the future by adding similar functions here
-    bool setInterval(const unsigned long& interval, hardware_alarm_callback_t callback)
+    bool setInterval(const float& interval, hardware_alarm_callback_t callback)
     {
       return setFrequency((float) (1000000.0f / interval), callback);
     }
@@ -175,7 +176,7 @@ class MBED_RPI_PICO_TimerInterrupt
 
     // interval (in microseconds) and duration (in milliseconds). Duration = 0 or not specified => run indefinitely
     // No params and duration now. To be added in the future by adding similar functions here
-    bool attachInterruptInterval(const unsigned long& interval, hardware_alarm_callback_t callback)
+    bool attachInterruptInterval(const float& interval, hardware_alarm_callback_t callback)
     {
       return setFrequency( (float) ( 1000000.0f / interval), callback);
     }

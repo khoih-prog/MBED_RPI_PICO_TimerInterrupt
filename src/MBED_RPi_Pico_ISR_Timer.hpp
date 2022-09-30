@@ -25,7 +25,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.1
+  Version: 1.1.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -33,6 +33,7 @@
   1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
+  1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
 *****************************************************************************************************************************/
 
 #pragma once
@@ -42,19 +43,21 @@
 
 #if ( defined(ARDUINO_NANO_RP2040_CONNECT) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || \
       defined(ARDUINO_GENERIC_RP2040) ) && defined(ARDUINO_ARCH_MBED)
-  #warning Using MBED RASPBERRY_PI_PICO platform
+  #if(_TIMERINTERRUPT_LOGLEVEL_>3)    
+    #warning Using MBED RASPBERRY_PI_PICO platform
+  #endif
 #else
   #error This code is intended to run on the MBED RASPBERRY_PI_PICO platform! Please check your Tools->Board setting.
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.1"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.2"
   
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MAJOR      1
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      1
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      2
 
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001001
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001002
 #endif
 
 #include "Arduino.h"
@@ -100,35 +103,35 @@ class MBED_RPI_PICO_ISR_Timer
     // Timer will call function 'f' every 'd' milliseconds forever
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setInterval(const unsigned long& d, timer_callback f);
+    int setInterval(const float& d, timer_callback f);
 
     // Timer will call function 'f' with parameter 'p' every 'd' milliseconds forever
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setInterval(const unsigned long& d, timer_callback_p f, void* p);
+    int setInterval(const float& d, timer_callback_p f, void* p);
 
     // Timer will call function 'f' after 'd' milliseconds one time
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setTimeout(const unsigned long& d, timer_callback f);
+    int setTimeout(const float& d, timer_callback f);
 
     // Timer will call function 'f' with parameter 'p' after 'd' milliseconds one time
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setTimeout(const unsigned long& d, timer_callback_p f, void* p);
+    int setTimeout(const float& d, timer_callback_p f, void* p);
 
     // Timer will call function 'f' every 'd' milliseconds 'n' times
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setTimer(const unsigned long& d, timer_callback f, const unsigned& n);
+    int setTimer(const float& d, timer_callback f, const unsigned& n);
 
     // Timer will call function 'f' with parameter 'p' every 'd' milliseconds 'n' times
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setTimer(const unsigned long& d, timer_callback_p f, void* p, const unsigned& n);
+    int setTimer(const float& d, timer_callback_p f, void* p, const unsigned& n);
 
     // updates interval of the specified timer
-    bool changeInterval(const unsigned& numTimer, const unsigned long& d);
+    bool changeInterval(const unsigned& numTimer, const float& d);
 
     // destroy the specified timer
     void deleteTimer(const unsigned& numTimer);
@@ -172,7 +175,7 @@ class MBED_RPI_PICO_ISR_Timer
     // low level function to initialize and enable a new timer
     // returns the timer number (numTimer) on success or
     // -1 on failure (f == NULL) or no free timers
-    int setupTimer(const unsigned long& d, void* f, void* p, bool h, const unsigned& n);
+    int setupTimer(const float& d, void* f, void* p, bool h, const unsigned& n);
 
     // find the first available slot
     int findFirstFreeSlot();
@@ -183,7 +186,7 @@ class MBED_RPI_PICO_ISR_Timer
       void*         callback;           // pointer to the callback function
       void*         param;              // function parameter
       bool          hasParam;           // true if callback takes a parameter
-      unsigned long delay;              // delay value
+      float         delay;              // delay value
       unsigned      maxNumRuns;         // number of runs to be executed
       unsigned      numRuns;            // number of executed runs
       bool          enabled;            // true if enabled

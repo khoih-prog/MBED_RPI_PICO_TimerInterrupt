@@ -25,7 +25,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.1
+  Version: 1.1.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -33,6 +33,7 @@
   1.0.1   K Hoang      22/10/2021 Fix platform in library.json for PIO
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
+  1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
 *****************************************************************************************************************************/
 
 #pragma once
@@ -158,7 +159,7 @@ int MBED_RPI_PICO_ISR_Timer::findFirstFreeSlot()
 }
 
 
-int MBED_RPI_PICO_ISR_Timer::setupTimer(const unsigned long& d, void* f, void* p, bool h, const unsigned& n) 
+int MBED_RPI_PICO_ISR_Timer::setupTimer(const float& d, void* f, void* p, bool h, const unsigned& n) 
 {
   int freeTimer;
 
@@ -192,37 +193,37 @@ int MBED_RPI_PICO_ISR_Timer::setupTimer(const unsigned long& d, void* f, void* p
 }
 
 
-int MBED_RPI_PICO_ISR_Timer::setTimer(const unsigned long& d, timer_callback f, const unsigned& n) 
+int MBED_RPI_PICO_ISR_Timer::setTimer(const float& d, timer_callback f, const unsigned& n) 
 {
   return setupTimer(d, (void *)f, NULL, false, n);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setTimer(const unsigned long& d, timer_callback_p f, void* p, const unsigned& n) 
+int MBED_RPI_PICO_ISR_Timer::setTimer(const float& d, timer_callback_p f, void* p, const unsigned& n) 
 {
   return setupTimer(d, (void *)f, p, true, n);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setInterval(const unsigned long& d, timer_callback f) 
+int MBED_RPI_PICO_ISR_Timer::setInterval(const float& d, timer_callback f) 
 {
   return setupTimer(d, (void *)f, NULL, false, RPI_PICO_RUN_FOREVER);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setInterval(const unsigned long& d, timer_callback_p f, void* p) 
+int MBED_RPI_PICO_ISR_Timer::setInterval(const float& d, timer_callback_p f, void* p) 
 {
   return setupTimer(d, (void *)f, p, true, RPI_PICO_RUN_FOREVER);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setTimeout(const unsigned long& d, timer_callback f) 
+int MBED_RPI_PICO_ISR_Timer::setTimeout(const float& d, timer_callback f) 
 {
   return setupTimer(d, (void *)f, NULL, false, RPI_PICO_RUN_ONCE);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setTimeout(const unsigned long& d, timer_callback_p f, void* p) 
+int MBED_RPI_PICO_ISR_Timer::setTimeout(const float& d, timer_callback_p f, void* p) 
 {
   return setupTimer(d, (void *)f, p, true, RPI_PICO_RUN_ONCE);
 }
 
-bool MBED_RPI_PICO_ISR_Timer::changeInterval(const unsigned& numTimer, const unsigned long& d) 
+bool MBED_RPI_PICO_ISR_Timer::changeInterval(const unsigned& numTimer, const float& d) 
 {
   if (numTimer >= RPI_PICO_MAX_TIMERS) 
   {

@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.1.2](#releases-v112)
   * [Releases v1.1.1](#releases-v111)
   * [Releases v1.1.0](#releases-v110)
   * [Releases v1.0.1](#releases-v101)
@@ -21,6 +22,10 @@
 ---
 
 ## Changelog
+
+### Releases v1.1.2
+
+1. Using `float` instead of `ulong` for interval for better accuracy
 
 ### Releases v1.1.1
 

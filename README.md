@@ -176,7 +176,7 @@ The current library implementation, using `xyz-Impl.h` instead of standard `xyz.
 
 You can include these `.hpp` files
 
-```
+```C++
 // Can be included as many times as necessary, without `Multiple Definitions` Linker Error
 #include "MBED_RPi_Pico_TimerInterrupt.hpp"   //https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
 
@@ -186,7 +186,7 @@ You can include these `.hpp` files
 
 in many files. But be sure to use the following `.h` files **in just 1 `.h`, `.cpp` or `.ino` file**, which must **not be included in any other file**, to avoid `Multiple Definitions` Linker Error
 
-```
+```C++
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "MBED_RPi_Pico_TimerInterrupt.h"     //https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt
 
@@ -230,7 +230,7 @@ Before using any Timer, you have to make sure the Timer has not been used by any
 
 ### 1.1 Init Hardware Timer
 
-```
+```C++
 // Select the timer you're using, from ITimer0(0)-ITimer3(3)
 // Init MBED_RPI_PICO_Timer
 MBED_RPI_PICO_Timer ITimer1(1);
@@ -240,7 +240,7 @@ MBED_RPI_PICO_Timer ITimer1(1);
 
 Use one of these functions with **interval in unsigned long microseconds**
 
-```   
+```C++
 // interval (in us), callback is ISR
 bool setInterval(unsigned long interval, pico_timer_callback callback);
 
@@ -250,7 +250,7 @@ bool attachInterruptInterval(unsigned long interval, pico_timer_callback callbac
 
 as follows
 
-```
+```C++
 // Never use Serial.print inside this mbed ISR. Will hang the system
 void TimerHandler(uint alarm_num)
 {
@@ -278,7 +278,7 @@ void setup()
 
 Use one of these functions with **frequency in float Hz**
 
-```
+```C++
 // frequency (in Hz), callback is ISR
 bool setFrequency(float frequency, pico_timer_callback callback)
 
@@ -288,7 +288,7 @@ bool attachInterrupt(float frequency, timer_callback callback);
 
 as follows
 
-```
+```C++
 // Never use Serial.print inside this mbed ISR. Will hang the system
 void TimerHandler(uint alarm_num)
 {
@@ -331,7 +331,7 @@ The 16 ISR_based Timers, designed for long timer intervals, only support using *
 
 ### 2.2 Init Hardware Timer and ISR-based Timer
 
-```
+```C++
 // Init MBED_RPI_PICO_Timer
 MBED_RPI_PICO_Timer ITimer1(1);
 
@@ -342,7 +342,7 @@ MBED_RPI_PICO_ISR_Timer ISR_timer;
 
 ### 2.3 Set Hardware Timer Interval and attach Timer Interrupt Handler functions
 
-```
+```C++
 // Never use Serial.print inside this mbed ISR. Will hang the system
 void TimerHandler(uint alarm_num)
 {
@@ -445,7 +445,7 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_Timers_Array_Simple on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.1
+MBED_RPi_Pico_TimerInterrupt v1.1.2
 [TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 1000.00
 [TISR] _count = 0-1000
 [TISR] hardware_alarm_set_target, uS = 1000
@@ -469,7 +469,7 @@ The following is the sample terminal output when running example [TimerInterrupt
 
 ```
 Starting TimerInterruptTest on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.1
+MBED_RPi_Pico_TimerInterrupt v1.1.2
 [TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 1.00
 [TISR] _count = 0-1000000
 [TISR] hardware_alarm_set_target, uS = 1000000
@@ -497,7 +497,7 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.1
+MBED_RPi_Pico_TimerInterrupt v1.1.2
 [TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 0.50
 [TISR] _count = 0-2000000
 [TISR] hardware_alarm_set_target, uS = 2000000
@@ -535,7 +535,7 @@ The following is the sample terminal output when running example [SwitchDebounce
 
 ```
 Starting SwitchDebounce on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.1
+MBED_RPi_Pico_TimerInterrupt v1.1.2
 [TISR] _timerNo = 1, Clock (Hz) = 1000000.00, _fre (Hz) = 1000.00
 [TISR] _count = 0-1000
 [TISR] hardware_alarm_set_target, uS = 1000
@@ -569,7 +569,7 @@ The following is the sample terminal output when running example [ISR_16_Timers_
 
 ```
 Starting ISR_16_Timers_Array_Complex on RaspberryPi Pico
-MBED_RPi_Pico_TimerInterrupt v1.1.1
+MBED_RPi_Pico_TimerInterrupt v1.1.2
 [TISR] _timerNo = 0, Clock (Hz) = 1000000.00, _fre (Hz) = 100.00
 [TISR] _count = 0-10000
 [TISR] hardware_alarm_set_target, uS = 10000
@@ -779,6 +779,7 @@ Submit issues to: [MBED_RPI_PICO_TimerInterrupt issues](https://github.com/khoih
 5. Add Table of Contents
 6. Fix `multiple-definitions` linker error
 7. Optimize library code by using `reference-passing` instead of `value-passing`
+8. Using `float` instead of `ulong` for interval for better accuracy
 
 ---
 ---
