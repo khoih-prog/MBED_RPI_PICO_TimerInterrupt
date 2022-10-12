@@ -26,7 +26,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.2
+  Version: 1.2.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -35,6 +35,7 @@
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
   1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
+  1.2.0   K.Hoang      12/10/2022 Fix poor timer accuracy bug
 *****************************************************************************************************************************/
 
 #pragma once

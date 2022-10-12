@@ -23,6 +23,10 @@
 
 ## Changelog
 
+### Releases v1.2.0
+
+1. Fix `poor-timer-accuracy` bug. Check [Poor accuracy on timer interrupt frequency or interval. #4](https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/issues/4)
+
 ### Releases v1.1.2
 
 1. Using `float` instead of `ulong` for interval for better accuracy

@@ -26,7 +26,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.2
+  Version: 1.2.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -35,6 +35,7 @@
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
   1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
+  1.2.0   K.Hoang      12/10/2022 Fix poor timer accuracy bug
 *****************************************************************************************************************************/
 
 #pragma once
@@ -50,13 +51,13 @@
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.2"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.2.0"
   
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MAJOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      2
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      2
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      0
 
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001002
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1002000
 #endif
 
 #ifndef TIMER_INTERRUPT_DEBUG
@@ -131,10 +132,13 @@ class MBED_RPI_PICO_TimerInterrupt
         
         // Hardware timer is preset in RP2040 at 1MHz / 1uS
         _frequency  = frequency;
-        _timerCount[_timerNo] = (uint64_t) TIM_CLOCK_FREQ / frequency;
+        
+        //_timerCount[_timerNo] = (uint64_t) TIM_CLOCK_FREQ / frequency;
+        // Ref: https://github.com/khoih-prog/MBED_RPI_PICO_TimerInterrupt/issues/4
+        _timerCount[_timerNo] = (uint64_t) ( ( float) TIM_CLOCK_FREQ / frequency ) - 1;
         
         TISR_LOGWARN5(F("_timerNo = "), _timerNo, F(", Clock (Hz) = "), TIM_CLOCK_FREQ, F(", _fre (Hz) = "), _frequency);
-        TISR_LOGWARN3(F("_count = "), (uint32_t) (_timerCount[_timerNo] >> 32) , F("-"), (uint32_t) (_timerCount[_timerNo]));
+        TISR_LOGWARN3(F("_count = "), (uint32_t) (_timerCount[_timerNo] >> 32) , F("-"), (uint32_t) (_timerCount[_timerNo]) + 1);
         
         _callback  =  callback;
          
@@ -148,7 +152,7 @@ class MBED_RPI_PICO_TimerInterrupt
         // KH, redundant, to be removed
         //hardware_alarm_set_target(_timerNo, absAlarmTime[_timerNo]);
          
-        TISR_LOGWARN1(F("hardware_alarm_set_target, uS = "), _timerCount[_timerNo]);
+        TISR_LOGWARN1(F("hardware_alarm_set_target, uS = "), _timerCount[_timerNo] + 1);
 
         return true;
       }

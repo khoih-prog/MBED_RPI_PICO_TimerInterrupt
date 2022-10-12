@@ -25,7 +25,7 @@
   Based on BlynkTimer.h
   Author: Volodymyr Shymanskyy
 
-  Version: 1.1.2
+  Version: 1.2.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -34,6 +34,7 @@
   1.1.0   K.Hoang      22/01/2022 Fix `multiple-definitions` linker error
   1.1.1   K.Hoang      25/09/2022 Remove redundant function call
   1.1.2   K.Hoang      25/09/2022 Using float instead of ulong for interval
+  1.2.0   K.Hoang      12/10/2022 Fix poor timer accuracy bug
 *****************************************************************************************************************************/
 
 #pragma once
@@ -51,13 +52,13 @@
 #endif
 
 #ifndef MBED_RPI_PICO_TIMER_INTERRUPT_VERSION
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.1.2"
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION       "MBED_RPi_Pico_TimerInterrupt v1.2.0"
   
   #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MAJOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      1
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      2
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_MINOR      2
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_PATCH      0
 
-  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1001002
+  #define MBED_RPI_PICO_TIMER_INTERRUPT_VERSION_INT        1002000
 #endif
 
 #include "Arduino.h"
