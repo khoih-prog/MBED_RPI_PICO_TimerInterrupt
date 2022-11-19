@@ -44,7 +44,7 @@
 
 #if !( defined(ARDUINO_NANO_RP2040_CONNECT) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || \
       defined(ARDUINO_GENERIC_RP2040) ) && defined(ARDUINO_ARCH_MBED)
-  #error This code is intended to run on the MBED RASPBERRY_PI_PICO platform! Please check your Tools->Board setting.
+#error This code is intended to run on the MBED RASPBERRY_PI_PICO platform! Please check your Tools->Board setting.
 #endif
 
 #include <string.h>
@@ -54,11 +54,11 @@ MBED_RPI_PICO_ISR_Timer::MBED_RPI_PICO_ISR_Timer()
 {
 }
 
-void MBED_RPI_PICO_ISR_Timer::init() 
+void MBED_RPI_PICO_ISR_Timer::init()
 {
   unsigned long current_millis = millis();   //elapsed();
 
-  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++) 
+  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++)
   {
     memset((void*) &timer[i], 0, sizeof (timer_t));
     timer[i].prev_millis = current_millis;
@@ -67,50 +67,50 @@ void MBED_RPI_PICO_ISR_Timer::init()
   numTimers = 0;
 }
 
-void MBED_RPI_PICO_ISR_Timer::run() 
+void MBED_RPI_PICO_ISR_Timer::run()
 {
   uint8_t i;
   unsigned long current_millis;
 
   // get current time
   current_millis = millis();   //elapsed();
-  
-  for (i = 0; i < RPI_PICO_MAX_TIMERS; i++) 
+
+  for (i = 0; i < RPI_PICO_MAX_TIMERS; i++)
   {
 
     timer[i].toBeCalled = RPI_PICO_DEFCALL_DONTRUN;
 
     // no callback == no timer, i.e. jump over empty slots
-    if (timer[i].callback != NULL) 
+    if (timer[i].callback != NULL)
     {
 
       // is it time to process this timer ?
       // see http://arduino.cc/forum/index.php/topic,124048.msg932592.html#msg932592
 
-      if ((current_millis - timer[i].prev_millis) >= timer[i].delay) 
+      if ((current_millis - timer[i].prev_millis) >= timer[i].delay)
       {
         unsigned long skipTimes = (current_millis - timer[i].prev_millis) / timer[i].delay;
-        
+
         // update time
         timer[i].prev_millis += timer[i].delay * skipTimes;
 
         // check if the timer callback has to be executed
-        if (timer[i].enabled) 
+        if (timer[i].enabled)
         {
 
           // "run forever" timers must always be executed
-          if (timer[i].maxNumRuns == RPI_PICO_RUN_FOREVER) 
+          if (timer[i].maxNumRuns == RPI_PICO_RUN_FOREVER)
           {
             timer[i].toBeCalled = RPI_PICO_DEFCALL_RUNONLY;
           }
           // other timers get executed the specified number of times
-          else if (timer[i].numRuns < timer[i].maxNumRuns) 
+          else if (timer[i].numRuns < timer[i].maxNumRuns)
           {
             timer[i].toBeCalled = RPI_PICO_DEFCALL_RUNONLY;
             timer[i].numRuns++;
 
             // after the last run, delete the timer
-            if (timer[i].numRuns >= timer[i].maxNumRuns) 
+            if (timer[i].numRuns >= timer[i].maxNumRuns)
             {
               timer[i].toBeCalled = RPI_PICO_DEFCALL_RUNANDDEL;
             }
@@ -120,7 +120,7 @@ void MBED_RPI_PICO_ISR_Timer::run()
     }
   }
 
-  for (i = 0; i < RPI_PICO_MAX_TIMERS; i++) 
+  for (i = 0; i < RPI_PICO_MAX_TIMERS; i++)
   {
     if (timer[i].toBeCalled == RPI_PICO_DEFCALL_DONTRUN)
       continue;
@@ -138,18 +138,18 @@ void MBED_RPI_PICO_ISR_Timer::run()
 
 // find the first available slot
 // return -1 if none found
-int MBED_RPI_PICO_ISR_Timer::findFirstFreeSlot() 
+int MBED_RPI_PICO_ISR_Timer::findFirstFreeSlot()
 {
   // all slots are used
-  if (numTimers >= RPI_PICO_MAX_TIMERS) 
+  if (numTimers >= RPI_PICO_MAX_TIMERS)
   {
     return -1;
   }
 
   // return the first slot with no callback (i.e. free)
-  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++) 
+  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++)
   {
-    if (timer[i].callback == NULL) 
+    if (timer[i].callback == NULL)
     {
       return i;
     }
@@ -160,22 +160,23 @@ int MBED_RPI_PICO_ISR_Timer::findFirstFreeSlot()
 }
 
 
-int MBED_RPI_PICO_ISR_Timer::setupTimer(const float& d, void* f, void* p, bool h, const unsigned& n) 
+int MBED_RPI_PICO_ISR_Timer::setupTimer(const float& d, void* f, void* p, bool h, const unsigned& n)
 {
   int freeTimer;
 
-  if (numTimers < 0) 
+  if (numTimers < 0)
   {
     init();
   }
 
   freeTimer = findFirstFreeSlot();
-  if (freeTimer < 0) 
+
+  if (freeTimer < 0)
   {
     return -1;
   }
 
-  if (f == NULL) 
+  if (f == NULL)
   {
     return -1;
   }
@@ -194,71 +195,71 @@ int MBED_RPI_PICO_ISR_Timer::setupTimer(const float& d, void* f, void* p, bool h
 }
 
 
-int MBED_RPI_PICO_ISR_Timer::setTimer(const float& d, timer_callback f, const unsigned& n) 
+int MBED_RPI_PICO_ISR_Timer::setTimer(const float& d, timer_callback f, const unsigned& n)
 {
   return setupTimer(d, (void *)f, NULL, false, n);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setTimer(const float& d, timer_callback_p f, void* p, const unsigned& n) 
+int MBED_RPI_PICO_ISR_Timer::setTimer(const float& d, timer_callback_p f, void* p, const unsigned& n)
 {
   return setupTimer(d, (void *)f, p, true, n);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setInterval(const float& d, timer_callback f) 
+int MBED_RPI_PICO_ISR_Timer::setInterval(const float& d, timer_callback f)
 {
   return setupTimer(d, (void *)f, NULL, false, RPI_PICO_RUN_FOREVER);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setInterval(const float& d, timer_callback_p f, void* p) 
+int MBED_RPI_PICO_ISR_Timer::setInterval(const float& d, timer_callback_p f, void* p)
 {
   return setupTimer(d, (void *)f, p, true, RPI_PICO_RUN_FOREVER);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setTimeout(const float& d, timer_callback f) 
+int MBED_RPI_PICO_ISR_Timer::setTimeout(const float& d, timer_callback f)
 {
   return setupTimer(d, (void *)f, NULL, false, RPI_PICO_RUN_ONCE);
 }
 
-int MBED_RPI_PICO_ISR_Timer::setTimeout(const float& d, timer_callback_p f, void* p) 
+int MBED_RPI_PICO_ISR_Timer::setTimeout(const float& d, timer_callback_p f, void* p)
 {
   return setupTimer(d, (void *)f, p, true, RPI_PICO_RUN_ONCE);
 }
 
-bool MBED_RPI_PICO_ISR_Timer::changeInterval(const unsigned& numTimer, const float& d) 
+bool MBED_RPI_PICO_ISR_Timer::changeInterval(const unsigned& numTimer, const float& d)
 {
-  if (numTimer >= RPI_PICO_MAX_TIMERS) 
+  if (numTimer >= RPI_PICO_MAX_TIMERS)
   {
     return false;
   }
 
   // Updates interval of existing specified timer
-  if (timer[numTimer].callback != NULL) 
+  if (timer[numTimer].callback != NULL)
   {
     timer[numTimer].delay = d;
     timer[numTimer].prev_millis = millis();
 
     return true;
   }
-  
+
   // false return for non-used numTimer, no callback
   return false;
 }
 
-void MBED_RPI_PICO_ISR_Timer::deleteTimer(const unsigned& timerId) 
+void MBED_RPI_PICO_ISR_Timer::deleteTimer(const unsigned& timerId)
 {
-  if (timerId >= RPI_PICO_MAX_TIMERS) 
+  if (timerId >= RPI_PICO_MAX_TIMERS)
   {
     return;
   }
 
   // nothing to delete if no timers are in use
-  if (numTimers == 0) 
+  if (numTimers == 0)
   {
     return;
   }
 
   // don't decrease the number of timers if the specified slot is already empty
-  if (timer[timerId].callback != NULL) 
+  if (timer[timerId].callback != NULL)
   {
     memset((void*) &timer[timerId], 0, sizeof (timer_t));
     timer[timerId].prev_millis = millis();
@@ -269,9 +270,9 @@ void MBED_RPI_PICO_ISR_Timer::deleteTimer(const unsigned& timerId)
 }
 
 // function contributed by code@rowansimms.com
-void MBED_RPI_PICO_ISR_Timer::restartTimer(const unsigned& numTimer) 
+void MBED_RPI_PICO_ISR_Timer::restartTimer(const unsigned& numTimer)
 {
-  if (numTimer >= RPI_PICO_MAX_TIMERS) 
+  if (numTimer >= RPI_PICO_MAX_TIMERS)
   {
     return;
   }
@@ -280,9 +281,9 @@ void MBED_RPI_PICO_ISR_Timer::restartTimer(const unsigned& numTimer)
 }
 
 
-bool MBED_RPI_PICO_ISR_Timer::isEnabled(const unsigned& numTimer) 
+bool MBED_RPI_PICO_ISR_Timer::isEnabled(const unsigned& numTimer)
 {
-  if (numTimer >= RPI_PICO_MAX_TIMERS) 
+  if (numTimer >= RPI_PICO_MAX_TIMERS)
   {
     return false;
   }
@@ -291,9 +292,9 @@ bool MBED_RPI_PICO_ISR_Timer::isEnabled(const unsigned& numTimer)
 }
 
 
-void MBED_RPI_PICO_ISR_Timer::enable(const unsigned& numTimer) 
+void MBED_RPI_PICO_ISR_Timer::enable(const unsigned& numTimer)
 {
-  if (numTimer >= RPI_PICO_MAX_TIMERS) 
+  if (numTimer >= RPI_PICO_MAX_TIMERS)
   {
     return;
   }
@@ -302,9 +303,9 @@ void MBED_RPI_PICO_ISR_Timer::enable(const unsigned& numTimer)
 }
 
 
-void MBED_RPI_PICO_ISR_Timer::disable(const unsigned& numTimer) 
+void MBED_RPI_PICO_ISR_Timer::disable(const unsigned& numTimer)
 {
-  if (numTimer >= RPI_PICO_MAX_TIMERS) 
+  if (numTimer >= RPI_PICO_MAX_TIMERS)
   {
     return;
   }
@@ -312,33 +313,33 @@ void MBED_RPI_PICO_ISR_Timer::disable(const unsigned& numTimer)
   timer[numTimer].enabled = false;
 }
 
-void MBED_RPI_PICO_ISR_Timer::enableAll() 
+void MBED_RPI_PICO_ISR_Timer::enableAll()
 {
   // Enable all timers with a callback assigned (used)
-  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++) 
+  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++)
   {
-    if (timer[i].callback != NULL && timer[i].numRuns == RPI_PICO_RUN_FOREVER) 
+    if (timer[i].callback != NULL && timer[i].numRuns == RPI_PICO_RUN_FOREVER)
     {
       timer[i].enabled = true;
     }
   }
 }
 
-void MBED_RPI_PICO_ISR_Timer::disableAll() 
+void MBED_RPI_PICO_ISR_Timer::disableAll()
 {
-  // Disable all timers with a callback assigned (used) 
-  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++) 
+  // Disable all timers with a callback assigned (used)
+  for (uint8_t i = 0; i < RPI_PICO_MAX_TIMERS; i++)
   {
-    if (timer[i].callback != NULL && timer[i].numRuns == RPI_PICO_RUN_FOREVER) 
+    if (timer[i].callback != NULL && timer[i].numRuns == RPI_PICO_RUN_FOREVER)
     {
       timer[i].enabled = false;
     }
   }
 }
 
-void MBED_RPI_PICO_ISR_Timer::toggle(const unsigned& numTimer) 
+void MBED_RPI_PICO_ISR_Timer::toggle(const unsigned& numTimer)
 {
-  if (numTimer >= RPI_PICO_MAX_TIMERS) 
+  if (numTimer >= RPI_PICO_MAX_TIMERS)
   {
     return;
   }
@@ -346,7 +347,7 @@ void MBED_RPI_PICO_ISR_Timer::toggle(const unsigned& numTimer)
   timer[numTimer].enabled = !timer[numTimer].enabled;
 }
 
-unsigned MBED_RPI_PICO_ISR_Timer::getNumTimers() 
+unsigned MBED_RPI_PICO_ISR_Timer::getNumTimers()
 {
   return numTimers;
 }
